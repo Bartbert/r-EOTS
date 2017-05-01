@@ -63,6 +63,8 @@ shinyServer(function(input, output) {
     print(forces.allies)
     print(forces.japan)
     print(result)
+    
+    write.csv(result, "data/battle_results.csv", row.names = FALSE)
 
   })
   

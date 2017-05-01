@@ -300,5 +300,28 @@ prepDataExpectedBattleWinner <- function(battle.results)
 {
   result <- battle.results %>%
     group_by(battle_winner) %>%
-    summarise(cnt = n())
+    summarise(win_probability = n()) %>%
+    mutate(win_probability = win_probability/100)
+  
+  if (nrow(filter(result, battle_winner == "Allies")) == 0)
+    bind_rows(data.table(battle_winner = "Allies", win_probability = 0))
+  
+  if (nrow(filter(result, battle_winner == "Japan")) == 0)
+    bind_rows(data.table(battle_winner = "Japan", win_probability = 0))
 }
+
+prepDataExpectedDamageInflicted <- function(battle.results)
+{
+  result.japan <- battle.results %>%
+    group_by(damage_japan) %>%
+    summarise(damage_probability = n()) %>%
+    mutate(damage_probability = damage_probability/100,
+           team_name = "Japan")
+  
+  result.allies <- battle.results %>%
+    group_by(damage_allies) %>%
+    summarise(damage_probability = n()) %>%
+    mutate(damage_probability = damage_probability/100,
+           team_name = "Allies")
+}
+
