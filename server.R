@@ -8,6 +8,8 @@
 library(shiny)
 
 shinyServer(function(input, output) {
+  
+  battle.analysis <- reactiveValues(battle_analysis = NULL)
 
   output$alliedForceList <- renderUI({
     selectizeInput("alliedForceList", 
@@ -60,12 +62,36 @@ shinyServer(function(input, output) {
                                     drm.allies = dr.mods$drm.allies, 
                                     drm.japan = dr.mods$drm.japan)
     
+    battle.analysis$battle_results <- result
+    
     print(forces.allies)
     print(forces.japan)
     print(result)
     
     write.csv(result, "data/battle_results.csv", row.names = FALSE)
 
+  })
+  
+  output$plotExpectedBattleWins <- renderPlot({
+    req(battle.analysis$battle_results)
+    
+    plotExpectedBattleWins(prepDataExpectedBattleWins(battle.analysis$battle_results))
+  })
+  
+  output$plotExpectedBattleDamageInflicted_Allies <- renderPlot({
+    req(battle.analysis$battle_results)
+    result <- prepDataExpectedBattleDamageInflicted(battle.analysis$battle_results)
+    plotExpectedBattleDamageInflicted(result$result.allies)
+  })
+  
+  output$plotExpectedBattleDamageInflicted_Japan <- renderPlot({
+    req(battle.analysis$battle_results)
+    result <- prepDataExpectedBattleDamageInflicted(battle.analysis$battle_results)
+    plotExpectedBattleDamageInflicted(result$result.japan)
+  })
+  
+  output$tblBattleResults <- renderDataTable({
+    battle.analysis$battle_results
   })
   
 })

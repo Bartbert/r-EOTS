@@ -7,7 +7,7 @@ library(dplyr)
 library(ggplot2)
 
 source("scripts/data_functions.R")
-# source("plot_functions.R")
+source("scripts/plot_functions.R")
 
 # Read in data tables
 unit.data <- fread("data/unit_data.csv")  %>%

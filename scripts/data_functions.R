@@ -296,7 +296,7 @@ getDieRollMods <- function(reaction.team, intel.condition, us.airpower, ec.allie
   list(drm.allies = drm.allies, drm.japan = drm.japan)
 }
 
-prepDataExpectedBattleWinner <- function(battle.results)
+prepDataExpectedBattleWins <- function(battle.results)
 {
   result <- battle.results %>%
     group_by(battle_winner) %>%
@@ -308,20 +308,26 @@ prepDataExpectedBattleWinner <- function(battle.results)
   
   if (nrow(filter(result, battle_winner == "Japan")) == 0)
     bind_rows(data.table(battle_winner = "Japan", win_probability = 0))
+  
+  result
 }
 
-prepDataExpectedDamageInflicted <- function(battle.results)
+prepDataExpectedBattleDamageInflicted <- function(battle.results)
 {
   result.japan <- battle.results %>%
     group_by(damage_japan) %>%
     summarise(damage_probability = n()) %>%
     mutate(damage_probability = damage_probability/100,
-           team_name = "Japan")
+           team_name = "Japan") %>%
+    rename(damage_inflicted = damage_japan)
   
   result.allies <- battle.results %>%
     group_by(damage_allies) %>%
     summarise(damage_probability = n()) %>%
     mutate(damage_probability = damage_probability/100,
-           team_name = "Allies")
+           team_name = "Allies") %>%
+    rename(damage_inflicted = damage_allies)
+  
+  list(result.allies = result.allies, result.japan = result.japan)
 }
 

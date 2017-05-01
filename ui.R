@@ -53,18 +53,47 @@ dashboardPage(
               fluidRow(
                 box(
                   width = 12, status = "info", solidHeader = TRUE, title = "Select Forces",
-                  fluidRow(column(width = 6, 
-                                  wellPanel(
-                                    uiOutput("alliedForceList")
-                                  )),
-                           column(width = 6, 
-                                  wellPanel(
-                                    uiOutput("japanForceList")
-                                  ))
+                  fluidRow(
+                    column(width = 6, 
+                           wellPanel(
+                             uiOutput("alliedForceList")
+                           )),
+                    column(width = 6, 
+                           wellPanel(
+                             uiOutput("japanForceList")
+                           ))
                   ),
                   fluidRow(
                     column(width = 6,
                            actionButton("btnAnalyzeBattle", label = "Analyze Battle"))
+                  )
+                )
+              ),
+              fluidRow(
+                box(
+                  width = 12, status = "info", solidHeader = TRUE, title = "Battle Analysis",
+                  fluidRow(
+                    column(width = 12,
+                           wellPanel(
+                             plotOutput("plotExpectedBattleWins", width = "100%", height = "400px")
+                           )
+                    )
+                  ),
+                  fluidRow(
+                    column(width = 6,
+                           wellPanel(
+                             plotOutput("plotExpectedBattleDamageInflicted_Allies", width = "100%", height = "400px")
+                           )
+                    ),
+                    column(width = 6,
+                           wellPanel(
+                             plotOutput("plotExpectedBattleDamageInflicted_Japan", width = "100%", height = "400px")
+                           )
+                    )
+                  ),
+                  fluidRow(
+                    column(width = 12,
+                           dataTableOutput("tblBattleResults"))
                   )
                 )
               )),
