@@ -6,7 +6,7 @@ getForceList <- function(battle.type, team.name, unit.data)
     arrange(nationality, type, branch, desc(attack_front)) %>%
     mutate(unit_stats = mapply(concatUnitStats, attack_front, defense, attack_back, range),
            type = paste0("[", substr(type, 1, 1), "]"),
-           label = paste(nationality, branch, type, ":", unit_stats)) %>%
+           label = paste(unit_name, ":", unit_stats)) %>%
     select(id, label)
   
   result <- setNames(result$id, result$label)

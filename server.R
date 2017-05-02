@@ -12,7 +12,7 @@ shinyServer(function(input, output, session) {
                 multiple = TRUE,
                 choices = NULL,
                 options = list(
-                  placeholder = "Select one or more units"
+                placeholder = "Select one or more units"
                 ))
   })
 
@@ -20,7 +20,7 @@ shinyServer(function(input, output, session) {
     selectizeInput("japanForceList", 
                 label = "Japanese Forces", 
                 multiple = TRUE,
-                choices = getForceList(input$radioBattleType, team.name = "Japan", unit.data = unit.data),
+                choices = NULL,
                 options = list(
                   placeholder = "Select one or more units"
                 ))
@@ -96,20 +96,12 @@ shinyServer(function(input, output, session) {
     filter = function(data, req) {
       
       query <- parseQueryString(req$QUERY_STRING)
-      id <- query$id  
-      
-      print(paste("id:", id))
+      unit.id <- as.integer(query$id)
 
-      name.file <- "images/WaspF.gif"
-      # image.unit <- readPNG(name.file, native = TRUE)
+      name.file <- file.path("images", data[id == unit.id, image_name_front])
       
-      # image <- tempfile()
-      # tryCatch({
-      #   png(image, width = 65, height = 65, bg = 'transparent')
-      #   image.unit
-      # }, finally = dev.off())
- 
-      # send the PNG image back in a response
+      print(paste("id:", unit.id, "-", name.file))
+      
       shiny:::httpResponse(
         200, 'image/gif', readBin(name.file, 'raw', file.info(name.file)[, 'size'])
       )
@@ -117,7 +109,6 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  # update the render function for selectize
   updateSelectizeInput(
     session, 'alliedForceList', server = TRUE,
     choices = getForceList("an", team.name = "Allies", unit.data = unit.data),
@@ -133,4 +124,21 @@ shinyServer(function(input, output, session) {
       ))
       )    
     )
+  
+  
+  updateSelectizeInput(
+    session, 'japanForceList', server = TRUE,
+    choices = getForceList("an", team.name = "Japan", unit.data = unit.data),
+    options = list(render = I(
+      sprintf(
+        "{
+        option: function(item, escape) {
+        return '<div><img width=\"65\" height=\"65\" ' +
+        'src=\"%s&id=' + escape(item.value) + '\" />' +
+        escape(item.value) + '</div>';
+        }}",
+      getUnitImage
+      ))
+      )    
+      )
 })
