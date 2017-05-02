@@ -1,97 +1,1 @@
-nationality,type,branch,attack_front,defense,attack_back,range,range_extended,extended_limit
-Japan,Ground,Army,20,12,9,,,
-Japan,Ground,Army,18,12,9,,,
-Japan,Ground,Army,18,18,9,,,
-Japan,Ground,Army,4,6,2,,,
-Japan,Ground,Army,6,6,3,,,
-Japan,Air,Army,20,10,10,2,4,FALSE
-Japan,Air,Army,22,10,11,2,4,FALSE
-Japan,Air,Navy,16,10,8,3,5,FALSE
-Japan,Air,Navy,20,10,10,3,5,FALSE
-Japan,Air,Navy,10,10,5,3,5,FALSE
-Japan,Air,Army,8,10,4,2,4,FALSE
-Japan,Air,Navy,8,10,4,3,5,FALSE
-Japan,Air,Army,8,10,6,4,5,TRUE
-Japan,Air,Army,6,10,3,2,4,FALSE
-China,Ground,Army,5,12,3,,,
-China,Ground,Army,6,12,4,,,
-US,Ground,Army,6,10,3,,,
-US,Ground,Army,10,10,5,,,
-US,Ground,Army,4,10,2,,,
-US,Ground,Army,3,10,1,,,
-US,Ground,Army,1,6,,,,
-US,Ground,Army,18,12,9,,,
-US,Ground,Army,22,12,11,,,
-US,Ground,Army,9,12,6,,,
-US,Air,Army,8,10,4,2,4,TRUE
-US,Air,Army,2,9,1,6,,
-US,Air,Army,10,10,5,2,4,FALSE
-US,Air,Army,4,10,2,6,,
-US,Air,Army,6,10,3,8,,
-US,Air,Army,9,10,6,2,4,FALSE
-US,Air,Army,6,10,5,2,4,TRUE
-UK,Air,Army,10,10,5,2,4,FALSE
-UK,Air,Army,4,10,2,6,,
-UK,Air,Army,7,9,4,2,4,TRUE
-UK,Air,Army,6,9,3,2,4,TRUE
-UK,Ground,Army,3,4,1,,,
-UK,Ground,Army,16,12,8,,,
-UK,Ground,Army,20,12,10,,,
-UK,Ground,Army,6,6,4,,,
-UK,Ground,Army,6,12,3,,,
-UK,Ground,Army,12,12,6,,,
-UK,Ground,Army,5,5,3,,,
-UK,Ground,Army,9,12,6,,,
-UK,Ground,Army,22,12,11,,,
-UK,Ground,Army,4,10,2,,,
-UK,Ground,Army,6,4,3,,,
-UK,Ground,Army,12,12,8,,,
-UK,Ground,Army,9,9,5,,,
-UK,Ground,Army,3,5,1,,,
-UK,Ground,Army,16,12,8,,,
-US,Air,Navy,1,8,,2,4,TRUE
-US,Air,Navy,6,10,3,2,4,TRUE
-US,Air,Navy,8,10,6,2,4,TRUE
-US,Air,Navy,10,10,8,2,4,TRUE
-US,Ground,Navy,2,6,,,,
-US,Ground,Navy,8,8,4,,,
-US,Ground,Navy,4,6,2,,,
-US,Ground,Navy,12,12,8,,,
-Dutch,Air,Army,7,9,4,2,4,TRUE
-Dutch,Ground,Army,1,6,,,,
-Dutch,Ground,Army,6,12,3,,,
-Japan,Naval,Navy,12,12,8,3,,
-Japan,Naval,Navy,10,12,7,3,,
-Japan,Naval,Navy,14,12,9,3,,
-Japan,Naval,Navy,17,14,9,,,
-Japan,Naval,Navy,20,14,10,,,
-Japan,Naval,Navy,8,8,6,3,,
-Japan,Naval,Navy,13,14,7,,,
-Japan,Naval,Navy,12,10,7,,,
-Japan,Naval,Navy,8,8,4,,,
-Japan,Naval,Navy,4,8,3,,,
-Japan,Naval,Navy,10,10,6,,,
-Japan,Naval,Navy,6,8,3,3,,
-Japan,Naval,Navy,18,18,9,,,
-UK,Naval,Navy,8,10,4,,,
-UK,Naval,Navy,3,8,2,,,
-Dutch,Naval,Navy,3,8,2,,,
-UK,Naval,Navy,5,8,3,,,
-UK,Naval,Navy,20,16,10,,,
-UK,Naval,Navy,10,12,5,2,,
-UK,Naval,Navy,14,14,7,,,
-UK,Naval,Navy,2,8,,2,,
-UK,Naval,Navy,6,8,3,,,
-UK,Naval,Navy,12,14,6,2,,
-US,Naval,Navy,2,4,1,,,
-US,Naval,Navy,4,6,2,,,
-US,Naval,Navy,12,12,8,2,,
-US,Naval,Navy,15,10,9,,,
-US,Naval,Navy,15,12,7,,,
-US,Naval,Navy,9,8,6,,,
-US,Naval,Navy,16,16,8,,,
-US,Naval,Navy,10,10,7,2,,
-US,Naval,Navy,14,14,10,2,,
-US,Naval,Navy,6,8,3,2,,
-US,Naval,Navy,10,12,5,,,
-US,Naval,Navy,8,10,4,,,
+nationality,type,branch,attack_front,defense,attack_back,range,range_extended,extended_limit,unit_name,image_name_front,image_name_backJapan,Ground,Army,20,12,9,,,,,,Japan,Ground,Army,18,12,9,,,,17 Inf Army,j17f.gif,j17b.gifJapan,Ground,Army,18,12,9,,,,18 Inf Army,j18f.gif,j18b.gifJapan,Ground,Army,18,12,9,,,,19 Inf Army,j19f.gif,j19b.gifJapan,Ground,Army,18,18,9,,,,,,Japan,Ground,Army,4,6,2,,,,4 SN Inf Bde,j4SNF.gif,j4SNB.gifJapan,Ground,Army,6,6,3,,,,SS Inf Bde,jSSF.gif,jSSB.gifJapan,Air,Army,20,10,10,2,4,FALSE,,,Japan,Air,Army,22,10,11,2,4,FALSE,,,Japan,Air,Navy,16,10,8,3,5,FALSE,21 Air Fleet,jna21f.gif,jna21b.gifJapan,Air,Navy,20,10,10,3,5,FALSE,,,Japan,Air,Navy,10,10,5,3,5,FALSE,25 Air Fleet,jna25f.gif,jna25b.gifJapan,Air,Navy,10,10,5,3,5,FALSE,26 Air Fleet,jna26f.gif,jna26b.gifJapan,Air,Navy,10,10,5,3,5,FALSE,27 Air Fleet,jna27f.gif,jna27b.gifJapan,Air,Navy,10,10,5,3,5,FALSE,28 Air Fleet,jna28f.gif,jna28b.gifJapan,Air,Army,8,10,4,2,4,FALSE,6 Air Div,ja6f.gif,ja6b.gifJapan,Air,Army,8,10,4,2,4,FALSE,7 Air Div,ja7f.gif,ja7b.gifJapan,Air,Navy,8,10,4,3,5,FALSE,,,Japan,Air,Army,8,10,6,4,5,TRUE,T Air Div,jatf.gif,jatb.gifJapan,Air,Army,6,10,3,2,4,FALSE,,,China,Ground,Army,5,12,3,,,,,,China,Ground,Army,6,12,4,,,,,,US,Ground,Army,6,10,3,,,,,,US,Ground,Army,10,10,5,,,,,,US,Ground,Army,4,10,2,,,,,,US,Ground,Army,3,10,1,,,,,,US,Ground,Army,1,6,,,,,,,US,Ground,Army,18,12,9,,,,,,US,Ground,Army,22,12,11,,,,I Inf Corps,usIF.gif,usIB.gifUS,Ground,Army,22,12,11,,,,IX Inf Corps,usIXF.gif,usIXB.gifUS,Ground,Army,22,12,11,,,,XIV Inf Corps,usXIVF.gif,usXIVB.gifUS,Ground,Army,22,12,11,,,,XXIV Inf Corps,usXXIVF.gif,usXXIVB.gifUS,Ground,Army,9,12,6,,,,,,US,Air,Army,8,10,4,2,4,TRUE,,,US,Air,Army,2,9,1,6,,,,,US,Air,Army,10,10,5,2,4,FALSE,5 AF,us5afF.gif,us5afB.gifUS,Air,Army,10,10,5,2,4,FALSE,13 AF,us13afF.gif,us13afB.gifUS,Air,Army,4,10,2,6,,,5 AF (LR),us5af2F.gif,us13af2B.gifUS,Air,Army,4,10,2,6,,,13 AF (LR),us13af2F.gif,us13af2B.gifUS,Air,Army,6,10,3,8,,,,,US,Air,Army,9,10,6,2,4,FALSE,,,US,Air,Army,6,10,5,2,4,TRUE,,,UK,Air,Army,10,10,5,2,4,FALSE,Aus Air Corps,Com_AAusF.gif,Com_AAusB.gifUK,Air,Army,4,10,2,6,,,,,UK,Air,Army,7,9,4,2,4,TRUE,,,UK,Air,Army,6,9,3,2,4,TRUE,,,UK,Ground,Army,3,4,1,,,,,,UK,Ground,Army,16,12,8,,,,,,UK,Ground,Army,20,12,10,,,,,,UK,Ground,Army,6,6,4,,,,,,UK,Ground,Army,6,12,3,,,,,,UK,Ground,Army,12,12,6,,,,1 Aus Inf Corps,Com_1AusF.gif,Com_1AusB.gifUK,Ground,Army,12,12,6,,,,2 Aus Inf Corps,Com_2AusF.gif,Com_2AusB.gifUK,Ground,Army,5,5,3,,,,PM Inf Bde,Com_PMF.gif,Com_PMB.gifUK,Ground,Army,9,12,6,,,,3 NZ Inf Div,Com_3NZF.gif,Com_3NZB.gifUK,Ground,Army,22,12,11,,,,3 Aus Inf Corps,Com_3AusF.gif,Com_3AusB.gifUK,Ground,Army,4,10,2,,,,,,UK,Ground,Army,6,4,3,,,,,,UK,Ground,Army,12,12,8,,,,,,UK,Ground,Army,9,9,5,,,,,,UK,Ground,Army,3,5,1,,,,,,UK,Ground,Army,16,12,8,,,,,,US,Air,Navy,1,8,,2,4,TRUE,,,US,Air,Navy,6,10,3,2,4,TRUE,1 MAW,usa1mawF.gif,usa1mawB.gifUS,Air,Navy,8,10,6,2,4,TRUE,2 MAW,usa2mawF.gif,usa2mawB.gifUS,Air,Navy,10,10,8,2,4,TRUE,,,US,Ground,Navy,2,6,,,,,,,US,Ground,Navy,8,8,4,,,,M Bde,usMF.gif,usMB.gifUS,Ground,Navy,4,6,2,,,,SF Bde,usSFF.gif,usSFB.gifUS,Ground,Navy,12,12,8,,,,1 M Div,us1MF.gif,us1MB.gifUS,Ground,Navy,12,12,8,,,,2 M Div,us2MF.gif,us2MB.gifUS,Ground,Navy,12,12,8,,,,3 M Div,us3MF.gif,us3MB.gifDutch,Air,Army,7,9,4,2,4,TRUE,,,Dutch,Ground,Army,1,6,,,,,,,Dutch,Ground,Army,6,12,3,,,,,,Japan,Naval,Navy,12,12,8,3,,,,,Japan,Naval,Navy,10,12,7,3,,,,,Japan,Naval,Navy,14,12,9,3,,,Shokaku (CV),shokakuF.gif,shokakuB.gifJapan,Naval,Navy,17,14,9,,,,Hiei (BB),HieiF.gif,HieiB.gifJapan,Naval,Navy,20,14,10,,,,,,Japan,Naval,Navy,8,8,6,3,,,Zuiho (CVL),zuihoF.gif,zuihoB.gifJapan,Naval,Navy,13,14,7,,,,Kongo (BB),kongo2F.gif,kongo2B.gifJapan,Naval,Navy,12,10,7,,,,Aoba (CA),aobaF.gif,aobaB.gifJapan,Naval,Navy,8,8,4,,,,Kamikaze (APD),kamikazeF.gif,kamikazeB.gifJapan,Naval,Navy,4,8,3,,,,Tenryu (CL),TenyruF.gif,TenyruB.gifJapan,Naval,Navy,10,10,6,,,,Nachi (CA),NachiF.gif,NachiB.gifJapan,Naval,Navy,6,8,3,3,,,,,Japan,Naval,Navy,18,18,9,,,,Yamato (BB),yamatoF.gif,yamatoB.gifUK,Naval,Navy,8,10,4,,,,,,UK,Naval,Navy,3,8,2,,,,Kent (CA),KentF.gif,KentB.gifDutch,Naval,Navy,3,8,2,,,,,,UK,Naval,Navy,5,8,3,,,,,,UK,Naval,Navy,20,16,10,,,,,,UK,Naval,Navy,10,12,5,2,,,,,UK,Naval,Navy,14,14,7,,,,,,UK,Naval,Navy,2,8,,2,,,,,UK,Naval,Navy,6,8,3,,,,,,UK,Naval,Navy,12,14,6,2,,,,,US,Naval,Navy,2,4,1,,,,,,US,Naval,Navy,4,6,2,,,,,,US,Naval,Navy,12,12,8,2,,,Enterprise (CV),EnterpriseF.gif,EnterpriseB.gifUS,Naval,Navy,12,12,8,2,,,Lexington (CV),LexingtonF.gif,LexingtonB.gifUS,Naval,Navy,12,12,8,2,,,Wasp (CV),WaspF.gif,WaspB.gifUS,Naval,Navy,15,10,9,,,,,,US,Naval,Navy,15,12,7,,,,,,US,Naval,Navy,9,8,6,,,,Northampton (CA),NorthamptonF.gif,NorthamptonB.gifUS,Naval,Navy,16,16,8,,,,Mass (BB),MassF.gif,MassB.gifUS,Naval,Navy,16,16,8,,,,N Carolina (BB),NCarolinaF.gif,NCarolinaB.gifUS,Naval,Navy,16,16,8,,,,Washington (BB),WashingtonF.gif,WashingtonB.gifUS,Naval,Navy,10,10,7,2,,,Belleau Wood (CVL),BelleauWoodF.gif,BelleauWoodB.gifUS,Naval,Navy,10,10,7,2,,,Cowpens (CVL),CowpensF.gif,CowpensB.gifUS,Naval,Navy,10,10,7,2,,,San Jacinto (CVL),SanJacintoF.gif,SanJacintoB.gifUS,Naval,Navy,14,14,10,2,,,Bunker Hill (CV),BunkerHillF.gif,BunkerHillB.gifUS,Naval,Navy,14,14,10,2,,,Essex (CV),EssexF.gif,EssexB.gifUS,Naval,Navy,6,8,3,2,,,Sangamon (CVE),SangamonF.gif,SangamonB.gifUS,Naval,Navy,10,12,5,,,,,,US,Naval,Navy,8,10,4,,,,,,
