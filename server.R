@@ -64,17 +64,53 @@ shinyServer(function(input, output, session) {
     req(input$alliedForceList)
     req(input$japanForceList)
     
-    print(input$`allies1-chkUnitStatus`)
+    units.flipped <- -1
+    units.extended <- -1
+    units.inhex <- -1
+    
+    for (unit.id in input$alliedForceList)
+    {
+      control.name <- paste0("allies", unit.id, "-chkUnitStatus")
+      
+      if ("is_flipped" %in% input[[control.name]])
+        units.flipped <- c(units.flipped, unit.id)
+      
+      if ("is_extended" %in% input[[control.name]])
+        units.extended <- c(units.extended, unit.id)
+      
+      if ("is_in_battle_hex" %in% input[[control.name]])
+        units.inhex <- c(units.inhex, unit.id)
+    }
+    
+    for (unit.id in input$japanForceList)
+    {
+      control.name <- paste0("japan", unit.id, "-chkUnitStatus")
+      
+      if ("is_flipped" %in% input[[control.name]])
+        units.flipped <- c(units.flipped, unit.id)
+      
+      if ("is_extended" %in% input[[control.name]])
+        units.extended <- c(units.extended, unit.id)
+      
+      if ("is_in_battle_hex" %in% input[[control.name]])
+        units.inhex <- c(units.inhex, unit.id)
+    }
+    
+    print(units.flipped)
+    print(units.extended)
+    print(units.inhex)
     
     forces.allies <- unit.data %>%
       filter(id %in% input$alliedForceList) %>%
-      mutate(is_flipped = FALSE,
-             is_extended = FALSE)
+      mutate(is_flipped = (id %in% units.flipped),
+             is_extended = (id %in% units.extended),
+             is_in_battle_hex = (id %in% units.inhex))
     
     forces.japan <- unit.data %>%
       filter(id %in% input$japanForceList) %>%
-      mutate(is_flipped = FALSE,
-             is_extended = FALSE)
+      mutate(is_flipped = (id %in% units.flipped),
+             is_extended = (id %in% units.extended),
+             is_in_battle_hex = (id %in% units.inhex))
     
     dr.mods <- getDieRollMods(reaction.team = input$radioReactionPlayer, 
                               intel.condition = input$radioIntelCondition, 
@@ -90,7 +126,11 @@ shinyServer(function(input, output, session) {
                                     drm.japan = dr.mods$drm.japan)
     
     battle.analysis$battle_results <- result
-
+    
+    write.csv(forces.allies, "output/forces_allies.csv", row.names = FALSE)
+    write.csv(forces.japan, "output/forces_japan.csv", row.names = FALSE)
+    write.csv(result, "output/battle_results.csv", row.names = FALSE)
+    
   })
   
   output$plotExpectedBattleWins <- renderPlot({

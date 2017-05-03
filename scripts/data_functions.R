@@ -174,9 +174,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
     forces.critical <- forces.all %>%
       mutate(loss_delta = if_else(is_flipped, af_back, af_front - af_back)) %>%
       arrange(desc(loss_delta), defense)
-    
-    critical_applied <- FALSE
-    
+
     for (i in 1:nrow(forces.critical))
     {
       if (damage.remaining >= forces.critical[i, defense])
@@ -190,30 +188,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
         }
         
         forces.damaged <- bind_rows(forces.damaged, forces.critical[i, ])
-        critical_applied <- TRUE
-        break()
       }
-    }
-    
-    if (!critical_applied)
-    {
-      # Apply a hit to the unit with lowest defense
-      forces.critical <- forces.critical %>%
-        mutate(max_damage = max_damage,
-               af_sort = if_else(max_damage, loss_delta, (loss_delta * -1))) %>%
-        filter(defense == min(defense),
-               row_number(desc(af_sort)) == 1)
-      
-      damage.remaining <- damage.remaining - forces.critical[1, defense]
-      
-      if (forces.critical[1, ]$is_flipped) {
-        forces.critical[1, ]$eliminated <- TRUE
-      } else {
-        forces.critical[1, ]$flipped <- TRUE
-      }
-      
-      forces.damaged <- bind_rows(forces.damaged, forces.critical[1, ])
-      
     }
     
     forces.all <- forces.all %>%
@@ -223,6 +198,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
     
   }
   
+  # Apply hits to full strength units
   forces.full <- forces.all %>%
     filter(!is_flipped,
            !eliminated) %>%
@@ -230,6 +206,9 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
   
   for (i in 1:nrow(forces.full))
   {
+    if (nrow(forces.full) == 0)
+      break()
+    
     if (damage.remaining >= forces.full[i, defense])
     {
       damage.remaining <- damage.remaining - forces.full[i, defense]
@@ -242,7 +221,8 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
     mutate(is_flipped = if_else(id %in% filter(forces.full, flipped)$id, TRUE, is_flipped),
            flipped = if_else(id %in% filter(forces.full, flipped)$id, TRUE, flipped)) 
   
-  if (nrow(forces.all) == sum(forces.all$is_flipped))
+  # Apply hits to flipped units
+  if (nrow(forces.all) == sum(forces.all$is_flipped) | critical)
   {
     forces.flipped <- forces.all %>%
       filter(is_flipped,
@@ -251,6 +231,9 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
     
     for (i in 1:nrow(forces.flipped))
     {
+      if (nrow(forces.flipped) == 0)
+        break()
+      
       if (damage.remaining >= forces.flipped[i, defense])
       {
         damage.remaining <- damage.remaining - forces.flipped[i, defense]
@@ -261,6 +244,33 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
     
     forces.all <- forces.all %>%
       mutate(eliminated = if_else(id %in% filter(forces.flipped, eliminated)$id, TRUE, eliminated)) 
+  }
+  
+  # Apply a step loss if critical hit, but no units damaged yet
+  if (critical & nrow(forces.damaged) == 0)
+  {
+    # Apply a hit to the unit with lowest defense
+    forces.critical <- forces.critical %>%
+      mutate(max_damage = max_damage,
+             af_sort = if_else(max_damage, loss_delta, (loss_delta * -1))) %>%
+      filter(defense == min(defense),
+             row_number(desc(af_sort)) == 1)
+    
+    damage.remaining <- damage.remaining - forces.critical[1, defense]
+    
+    if (forces.critical[1, ]$is_flipped) {
+      forces.critical[1, ]$eliminated <- TRUE
+    } else {
+      forces.critical[1, ]$flipped <- TRUE
+    }
+    
+    forces.damaged <- bind_rows(forces.damaged, forces.critical[1, ])
+    
+    forces.all <- forces.all %>%
+      mutate(is_flipped = if_else(id %in% filter(forces.critical, flipped)$id, TRUE, is_flipped),
+             flipped = if_else(id %in% filter(forces.critical, flipped)$id, TRUE, flipped),
+             eliminated = if_else(id %in% filter(forces.critical, eliminated)$id, TRUE, eliminated)) 
+    
   }
   
   result <- forces.all %>%
@@ -330,4 +340,24 @@ prepDataExpectedBattleDamageInflicted <- function(battle.results)
   
   list(result.allies = result.allies, result.japan = result.japan)
 }
+
+testBattleAnalysis <- function()
+{
+  forces.allies <- fread("output/forces_allies.csv")
+  forces.japan <- fread("output/forces_japan.csv")
+  result.saved <- fread("output/battle_results.csv")
+  
+  reaction.team <- "Japan"
+  intel.condition <- "Intercept"
+  drm.allies <- 0
+  drm.japan <- 0
+  
+  result <- analyzeAirNavalBattle(forces.allies = forces.allies, 
+                                  forces.japan = forces.japan, 
+                                  reaction.team = reaction.team, 
+                                  intel.condition = intel.condition, 
+                                  drm.allies = drm.allies, 
+                                  drm.japan = drm.allies)
+}
+
 
