@@ -1,6 +1,5 @@
 library(shiny)
-library(caTools)
-library(png)
+
 
 shinyServer(function(input, output, session) {
   
@@ -38,12 +37,6 @@ shinyServer(function(input, output, session) {
       mutate(is_flipped = FALSE,
              is_extended = FALSE)
     
-    print(input$radioReactionPlayer)
-    print(input$radioIntelCondition)
-    print(input$radioUSAir)
-    print(input$numAlliedECmodifier)
-    print(input$numJapanECmodifier)
-    
     dr.mods <- getDieRollMods(reaction.team = input$radioReactionPlayer, 
                               intel.condition = input$radioIntelCondition, 
                               us.airpower = as.integer(input$radioUSAir), 
@@ -58,11 +51,7 @@ shinyServer(function(input, output, session) {
                                     drm.japan = dr.mods$drm.japan)
     
     battle.analysis$battle_results <- result
-    
-    print(forces.allies)
-    print(forces.japan)
-    print(result)
-    
+
     write.csv(result, "data/battle_results.csv", row.names = FALSE)
 
   })
