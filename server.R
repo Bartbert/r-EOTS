@@ -4,6 +4,7 @@ library(shiny)
 shinyServer(function(input, output, session) {
   
   battle.analysis <- reactiveValues(battle_analysis = NULL)
+  clear.list <- reactiveValues(allied_units = NULL)
   
   output$alliedForceList <- renderUI({
     selectizeInput("alliedForceList", 
@@ -58,7 +59,7 @@ shinyServer(function(input, output, session) {
     unit.status <- callModule(unitStatus, paste0("japan", unit.id), unit.id, unit.data)
     
   })
-  
+
   observeEvent(input$btnAnalyzeBattle, {
     
     req(input$alliedForceList)
@@ -95,11 +96,7 @@ shinyServer(function(input, output, session) {
       if ("is_in_battle_hex" %in% input[[control.name]])
         units.inhex <- c(units.inhex, unit.id)
     }
-    
-    print(units.flipped)
-    print(units.extended)
-    print(units.inhex)
-    
+
     forces.allies <- unit.data %>%
       filter(id %in% input$alliedForceList) %>%
       mutate(is_flipped = (id %in% units.flipped),
@@ -125,11 +122,13 @@ shinyServer(function(input, output, session) {
                                     drm.allies = dr.mods$drm.allies, 
                                     drm.japan = dr.mods$drm.japan)
     
-    battle.analysis$battle_results <- result
+    battle.analysis$battle_results <- result$battle.results
+    battle.analysis$battle_losses <- result$battle.losses
     
     write.csv(forces.allies, "output/forces_allies.csv", row.names = FALSE)
     write.csv(forces.japan, "output/forces_japan.csv", row.names = FALSE)
-    write.csv(result, "output/battle_results.csv", row.names = FALSE)
+    write.csv(result$battle.results, "output/battle_results.csv", row.names = FALSE)
+    write.csv(result$battle.losses, "output/battle_losses.csv", row.names = FALSE)
     
   })
   
@@ -149,6 +148,18 @@ shinyServer(function(input, output, session) {
     req(battle.analysis$battle_results)
     result <- prepDataExpectedBattleDamageInflicted(battle.analysis$battle_results)
     plotExpectedBattleDamageInflicted(result$result.japan)
+  })
+  
+  output$plotExpectedBattleDamageTaken_Allies <- renderPlot({
+    req(battle.analysis$battle_losses)
+    result <- prepDataExpectedBattleDamageTaken(battle.analysis$battle_losses, unit.data)
+    plotExpectedBattleDamageTaken(result, "Allies")
+  })
+  
+  output$plotExpectedBattleDamageTaken_Japan <- renderPlot({
+    req(battle.analysis$battle_losses)
+    result <- prepDataExpectedBattleDamageTaken(battle.analysis$battle_losses, unit.data)
+    plotExpectedBattleDamageTaken(result, "Japan")
   })
   
   output$tblBattleResults <- renderDataTable({

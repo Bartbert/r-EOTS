@@ -38,3 +38,24 @@ plotExpectedBattleDamageInflicted <- function(data.all)
   p
   
 }
+
+plotExpectedBattleDamageTaken <- function(data.all, team.name)
+{
+  plot.data <- data.all %>%
+    mutate(damage_taken = factor(damage_taken)) %>%
+    filter(team == team.name)
+
+  p <- ggplot(plot.data, aes(x = damage_taken, y = damage_probability))
+  p <- p + geom_bar(stat = "identity")
+  p <- p + xlab("Damage Taken")
+  p <- p + ylab("Probability")
+  p <- p + labs(fill = "")
+  p <- p + scale_y_continuous(labels = percent)
+  p <- p + ggtitle(paste("Expected Damage Taken By", team.name))
+  p <- p + geom_text(aes(label=percent(damage_probability), y = damage_probability), vjust=-.5, colour="black", size=4)
+  p <- p + scale_fill_brewer(palette = "Set1")
+  p <- p + theme(axis.text.x = element_text(angle=30, hjust=1, vjust=1), legend.position = "top")
+  
+  p
+  
+}

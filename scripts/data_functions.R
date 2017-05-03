@@ -100,6 +100,8 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
            japan_post_battle_af = 0,
            battle_winner = NA_character_)
   
+  battle.losses <- data.table()
+  
   for (i in 1:nrow(result))
   {
     pb.allies <- applyDamage(forces.allies, 
@@ -154,9 +156,20 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
     result[i, ]$japan_post_battle_af <- sum(pb.japan$af_post_battle)
     result[i, ]$battle_winner <- if_else(result[i, ]$allies_post_battle_af > result[i, ]$japan_post_battle_af,
                                           "Allies", "Japan")
+    
+    pb.allies <- pb.allies %>%
+      mutate(dr_allies = battle.results[i, dr_allies],
+             dr_japan = battle.results[i, dr_japan])
+    
+    pb.japan <- pb.japan %>%
+      mutate(dr_allies = battle.results[i, dr_allies],
+             dr_japan = battle.results[i, dr_japan])
+    
+    battle.losses <- battle.losses %>%
+      bind_rows(pb.allies, pb.japan)
   }
   
-  result
+  list(battle.results = result, battle.losses = battle.losses)
 }
 
 applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE)
@@ -341,11 +354,38 @@ prepDataExpectedBattleDamageInflicted <- function(battle.results)
   list(result.allies = result.allies, result.japan = result.japan)
 }
 
+prepDataExpectedBattleDamageTaken <- function(battle.losses, unit.data)
+{
+
+  result <- battle.losses %>% 
+    inner_join(unit.data, "id") %>%
+    mutate(damage_taken = (flipped * defense + eliminated * defense)) %>%
+    group_by(team, dr_allies, dr_japan) %>%
+    summarise(cnt = n(),
+              damage_taken = sum(damage_taken)) %>%
+    group_by(team, damage_taken) %>%
+    summarise(cnt = n()) %>%
+    mutate(damage_probability = cnt/100)
+  
+}
+
+prepDataExpectedBattleDamageTaken_ByUnit <- function(battle.losses, unit.data)
+{
+  result <- battle.losses %>% 
+    inner_join(unit.data, "id") %>%
+    mutate(damage_taken = (flipped * defense + eliminated * defense)) %>%
+    group_by(id, unit_name, damage_taken) %>%
+    summarise(cnt = n()) %>%
+    mutate(damage_probability = cnt/100)
+  
+}
+
 testBattleAnalysis <- function()
 {
   forces.allies <- fread("output/forces_allies.csv")
   forces.japan <- fread("output/forces_japan.csv")
-  result.saved <- fread("output/battle_results.csv")
+  battle.results <- fread("output/battle_results.csv")
+  battle.losses <- fread("output/battle_losses.csv")
   
   reaction.team <- "Japan"
   intel.condition <- "Intercept"

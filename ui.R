@@ -56,11 +56,15 @@ dashboardPage(
                   fluidRow(
                     column(width = 6, 
                            wellPanel(
-                             uiOutput("alliedForceList")
+                             fluidRow(
+                               column(width = 12, uiOutput("alliedForceList"))
+                             )
                            )),
                     column(width = 6, 
                            wellPanel(
-                             uiOutput("japanForceList")
+                             fluidRow(
+                               column(width = 12, uiOutput("japanForceList"))
+                             )
                            ))
                   ),
                   fluidRow(
@@ -95,6 +99,18 @@ dashboardPage(
                     column(width = 6,
                            wellPanel(
                              plotOutput("plotExpectedBattleDamageInflicted_Japan", width = "100%", height = "400px")
+                           )
+                    )
+                  ),
+                  fluidRow(
+                    column(width = 6,
+                           wellPanel(
+                             plotOutput("plotExpectedBattleDamageTaken_Allies", width = "100%", height = "400px")
+                           )
+                    ),
+                    column(width = 6,
+                           wellPanel(
+                             plotOutput("plotExpectedBattleDamageTaken_Japan", width = "100%", height = "400px")
                            )
                     )
                   ),
