@@ -64,14 +64,21 @@ dashboardPage(
                            ))
                   ),
                   fluidRow(
-                    column(width = 6,
-                           actionButton("btnAnalyzeBattle", label = "Analyze Battle"))
+                    column(width = 6, wellPanel(tags$div(id = "divAlliedUnits"))),
+                    column(width = 6, wellPanel(tags$div(id = "divJapanUnits")))
                   )
                 )
               ),
               fluidRow(
                 box(
                   width = 12, status = "info", solidHeader = TRUE, title = "Battle Analysis",
+                  fluidRow(
+                    column(width = 12, align = "center",
+                           inputPanel(
+                             actionButton("btnAnalyzeBattle", label = "Analyze Battle")
+                           )
+                    )
+                  ),
                   fluidRow(
                     column(width = 12,
                            wellPanel(

@@ -4,28 +4,67 @@ library(shiny)
 shinyServer(function(input, output, session) {
   
   battle.analysis <- reactiveValues(battle_analysis = NULL)
-
+  
   output$alliedForceList <- renderUI({
     selectizeInput("alliedForceList", 
-                label = "Allied Forces", 
-                multiple = TRUE,
-                choices = NULL,
-                options = list(
-                placeholder = "Select one or more units"
-                ))
+                   label = "Allied Forces", 
+                   multiple = TRUE,
+                   choices = NULL,
+                   options = list(
+                     placeholder = "Select one or more units"
+                   ))
   })
-
+  
   output$japanForceList <- renderUI({
     selectizeInput("japanForceList", 
-                label = "Japanese Forces", 
-                multiple = TRUE,
-                choices = NULL,
-                options = list(
-                  placeholder = "Select one or more units"
-                ))
+                   label = "Japanese Forces", 
+                   multiple = TRUE,
+                   choices = NULL,
+                   options = list(
+                     placeholder = "Select one or more units")
+    )
+  })
+  
+  observeEvent(input$alliedForceList, {
+    
+    removeUI(selector = "div:has(> #alliesUnitInfo)", multiple = TRUE)
+
+    unit.list <- input$alliedForceList
+    
+    for (unit.id in unit.list) {
+      insertUI(selector = "#divAlliedUnits", 
+               where = "afterBegin", 
+               ui = tagList(unitStatusUI(paste0("allies", unit.id), "allies"))
+      )
+    }
+    
+    unit.status <- callModule(unitStatus, paste0("allies", unit.id), unit.id, unit.data)
+
+  })
+  
+  observeEvent(input$japanForceList, {
+    
+    removeUI(selector = "div:has(> #japanUnitInfo)", multiple = TRUE)
+    
+    unit.list <- input$japanForceList
+    
+    for (unit.id in unit.list) {
+      insertUI(selector = "#divJapanUnits", 
+               where = "afterBegin", 
+               ui = tagList(unitStatusUI(paste0("japan", unit.id), "japan"))
+      )
+    }
+    
+    unit.status <- callModule(unitStatus, paste0("japan", unit.id), unit.id, unit.data)
+    
   })
   
   observeEvent(input$btnAnalyzeBattle, {
+    
+    req(input$alliedForceList)
+    req(input$japanForceList)
+    
+    print(input$`allies1-chkUnitStatus`)
     
     forces.allies <- unit.data %>%
       filter(id %in% input$alliedForceList) %>%
@@ -52,8 +91,6 @@ shinyServer(function(input, output, session) {
     
     battle.analysis$battle_results <- result
 
-    write.csv(result, "data/battle_results.csv", row.names = FALSE)
-
   })
   
   output$plotExpectedBattleWins <- renderPlot({
@@ -77,7 +114,7 @@ shinyServer(function(input, output, session) {
   output$tblBattleResults <- renderDataTable({
     battle.analysis$battle_results
   })
-
+  
   getUnitImage <- session$registerDataObj(
     
     name   = 'arrests', # an arbitrary but unique name for the data object
@@ -86,11 +123,9 @@ shinyServer(function(input, output, session) {
       
       query <- parseQueryString(req$QUERY_STRING)
       unit.id <- as.integer(query$id)
-
+      
       name.file <- file.path("images", data[id == unit.id, image_name_front])
-      
-      print(paste("id:", unit.id, "-", name.file))
-      
+
       shiny:::httpResponse(
         200, 'image/gif', readBin(name.file, 'raw', file.info(name.file)[, 'size'])
       )
@@ -112,7 +147,7 @@ shinyServer(function(input, output, session) {
       getUnitImage
       ))
       )    
-    )
+      )
   
   
   updateSelectizeInput(
@@ -130,4 +165,4 @@ shinyServer(function(input, output, session) {
       ))
       )    
       )
-})
+  })
