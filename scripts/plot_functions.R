@@ -59,3 +59,28 @@ plotExpectedBattleDamageTaken <- function(data.all, team.name)
   p
   
 }
+
+plotExpectedBattleDamageTaken_ByUnit <- function(data.all)
+{
+  plot.data <- data.all %>%
+    data.table() %>%
+    mutate(unit_name = as.factor(unit_name),
+           sort_val = if_else(team == "Allies", 0, 1),
+           unit_name = reorder(unit_name, sort_val, FUN = sum))
+  
+  p <- ggplot(plot.data, aes(x = damage_taken, y = unit_name, colour = team))
+  p <- p + geom_point(size = 3)
+  p <- p + xlab("Damage Taken")
+  p <- p + ylab("")
+  p <- p + labs(colour = "")
+  p <- p + geom_text(aes(label = percent(damage_probability)), vjust = 1.5, hjust = .5, colour = "black", size = 4)
+  p <- p + geom_text(aes(label = damage_taken), vjust = -.75, hjust = .5, colour = "blue", size = 4)
+  p <- p + scale_fill_brewer(palette = "Set1")
+  p <- p + theme(panel.grid.major.x = element_blank(),
+                panel.grid.minor.x = element_blank(),
+                panel.grid.major.y = element_line(colour = "grey60", linetype = "dashed"))
+  
+  p
+}
+
+

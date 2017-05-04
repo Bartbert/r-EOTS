@@ -162,8 +162,15 @@ shinyServer(function(input, output, session) {
     plotExpectedBattleDamageTaken(result, "Japan")
   })
   
+  output$plotExpectedBattleDamageTaken_ByUnit <- renderPlot({
+    req(battle.analysis$battle_losses)
+    result <- prepDataExpectedBattleDamageTaken_ByUnit(battle.analysis$battle_losses, unit.data)
+    plotExpectedBattleDamageTaken_ByUnit(result)
+  })
+  
   output$tblBattleResults <- renderDataTable({
-    battle.analysis$battle_results
+    req(battle.analysis$battle_results)
+    prepDataBattleResultsGrid(battle.analysis$battle_results)
   })
   
   getUnitImage <- session$registerDataObj(

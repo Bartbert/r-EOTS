@@ -374,10 +374,22 @@ prepDataExpectedBattleDamageTaken_ByUnit <- function(battle.losses, unit.data)
   result <- battle.losses %>% 
     inner_join(unit.data, "id") %>%
     mutate(damage_taken = (flipped * defense + eliminated * defense)) %>%
-    group_by(id, unit_name, damage_taken) %>%
+    group_by(id, team, unit_name, damage_taken) %>%
     summarise(cnt = n()) %>%
     mutate(damage_probability = cnt/100)
   
+}
+
+prepDataBattleResultsGrid <- function(battle.results)
+{
+  result <- battle.results %>%
+    select(`Allied DR` = dr_allies,
+           `Japan DR` = dr_japan,
+           `Allied Damage Inflicted` = damage_allies,
+           `Japan Damage Inflicted` = damage_japan,
+           `Allied Post-Battle AF` = allies_post_battle_af,
+           `Japan Post-Battle AF` = japan_post_battle_af,
+           `Battle Winner`  = battle_winner)
 }
 
 testBattleAnalysis <- function()
