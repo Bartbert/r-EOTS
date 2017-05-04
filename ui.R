@@ -116,6 +116,13 @@ dashboardPage(
                   ),
                   fluidRow(
                     column(width = 12,
+                           wellPanel(
+                             plotOutput("plotExpectedBattleDamageTaken_ByUnit", width = "100%", height = "400px")
+                           )
+                    )
+                  ),
+                  fluidRow(
+                    column(width = 12,
                            dataTableOutput("tblBattleResults"))
                   )
                 )
