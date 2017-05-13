@@ -105,13 +105,13 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
   for (i in 1:nrow(result))
   {
     pb.allies <- applyDamage(forces.allies, 
-                             battle.results[i, damage_japan],
+                             damage = battle.results[i, damage_japan],
                              critical = (battle.results[i, dr_japan] == 9), 
                              max_damage = (reaction.team == "Japan"), 
                              enemy_air_unit_count = getAirUnitCount(forces.japan, remote_only = FALSE))
     
     pb.japan <- applyDamage(forces.japan, 
-                            battle.results[i, damage_allies],
+                            damage = battle.results[i, damage_allies],
                             critical = (battle.results[i, dr_allies] == 9), 
                             max_damage = (reaction.team == "Allies"), 
                             enemy_air_unit_count = getAirUnitCount(forces.allies, remote_only = FALSE))
@@ -215,7 +215,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
 
     for (i in 1:nrow(forces.critical))
     {
-      if (isIneligibleForDamage(forces.all, unit.record = forces.critical[i, ], remote.air.unit.limit = enemy_air_unit_count))
+      if (isIneligibleForDamage(forces.critical, unit.record = forces.critical[i, ], remote.air.unit.limit = enemy_air_unit_count))
         next()
       
       if (damage.remaining >= forces.critical[i, defense])
@@ -245,7 +245,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
     if (nrow(forces.full) == 0)
       break()
 
-    if (isIneligibleForDamage(forces.all, unit.record = forces.full[i, ], remote.air.unit.limit = enemy_air_unit_count))
+    if (isIneligibleForDamage(forces.full, unit.record = forces.full[i, ], remote.air.unit.limit = enemy_air_unit_count))
       next()
     
     if (damage.remaining >= forces.full[i, defense])
@@ -270,7 +270,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
       if (nrow(forces.flipped) == 0)
         break()
  
-      if (isIneligibleForDamage(forces.all, unit.record = forces.flipped[i, ], remote.air.unit.limit = enemy_air_unit_count))
+      if (isIneligibleForDamage(forces.flipped, unit.record = forces.flipped[i, ], remote.air.unit.limit = enemy_air_unit_count))
         next()
       
       if (damage.remaining >= forces.flipped[i, defense])
@@ -295,7 +295,7 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
     
     for (i in 1:nrow(forces.critical))
     {
-      if (isIneligibleForDamage(forces.all, unit.record = forces.critical[i, ], remote.air.unit.limit = enemy_air_unit_count))
+      if (isIneligibleForDamage(forces.critical, unit.record = forces.critical[i, ], remote.air.unit.limit = enemy_air_unit_count))
         next()
 
       if (forces.critical[1, ]$is_flipped) {
