@@ -68,6 +68,10 @@ dashboardPage(
                            ))
                   ),
                   fluidRow(
+                    column(width = 6, wellPanel(htmlOutput("txtAlliedInfo"))),
+                    column(width = 6, wellPanel(htmlOutput("txtJapanInfo")))
+                  ),
+                  fluidRow(
                     column(width = 6, wellPanel(tags$div(id = "divAlliedUnits"))),
                     column(width = 6, wellPanel(tags$div(id = "divJapanUnits")))
                   )

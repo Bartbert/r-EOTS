@@ -436,10 +436,17 @@ prepDataExpectedBattleDamageInflicted <- function(battle.results)
   list(result.allies = result.allies, result.japan = result.japan)
 }
 
-prepDataExpectedBattleDamageTaken <- function(battle.losses, unit.data)
+prepDataExpectedBattleDamageTaken <- function(battle.losses, unit.data, exclude.critical = FALSE)
 {
+  result <- battle.losses
+  
+  if (exclude.critical)
+  {
+    result <- result %>%
+      filter(dr_allies != 9, dr_japan != 9)
+  }
 
-  result <- battle.losses %>% 
+  result <- result %>% 
     inner_join(unit.data, "id") %>%
     mutate(damage_taken = (flipped * defense + eliminated * defense)) %>%
     group_by(team, dr_allies, dr_japan) %>%

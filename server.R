@@ -4,7 +4,8 @@ library(shiny)
 shinyServer(function(input, output, session) {
   
   battle.analysis <- reactiveValues(battle_analysis = NULL)
-  clear.list <- reactiveValues(allied_units = NULL)
+  battle.forces <- reactiveValues(allied_units = NULL,
+                                  japan_units = NULL)
   
   output$alliedForceList <- renderUI({
     selectizeInput("alliedForceList", 
@@ -59,8 +60,96 @@ shinyServer(function(input, output, session) {
     unit.status <- callModule(unitStatus, paste0("japan", unit.id), unit.id, unit.data)
     
   })
+  
+  output$txtAlliedInfo <- renderUI({
 
-  observeEvent(input$btnAnalyzeBattle, {
+    req(input$alliedForceList)
+    req(input$japanForceList)
+    
+    getBattleUnits()
+    
+    forces.allies <- battle.forces$allied_units %>%
+      mutate(modifier = if_else(is_extended, 0.5, 1.0),
+             af_front = attack_front * modifier,
+             af_back =  attack_back * modifier,
+             af = if_else(is_flipped, af_back, af_front)) 
+    
+    af.allies <- sum(forces.allies$af)
+    
+    damage.min <- NA_integer_
+    
+    if (!is.null(battle.analysis$battle_losses)) 
+    {
+      result.w.crit <- prepDataExpectedBattleDamageTaken(battle.analysis$battle_losses, unit.data) %>%
+        filter(team == "Japan")
+      
+      result.wo.crit <- prepDataExpectedBattleDamageTaken(battle.analysis$battle_losses, unit.data, exclude.critical = TRUE) %>%
+        filter(team == "Japan")
+      
+      damage.min <- min(result.w.crit$damage_taken)
+      damage.max.w.crit <- max(result.w.crit$damage_taken)
+      damage.max.wo.crit <- max(result.wo.crit$damage_taken)
+    }
+    
+    text <- paste("Allied AF =", af.allies)
+    
+    if (!is.na(damage.min))
+    {
+      text <- paste(text, "<br/>", 
+                    "Min Damage =", damage.min, "<br/>", 
+                    "Max Damage (with Critical) =", damage.max.w.crit, "<br/>",
+                    "Max Damage (w/o Critical =", damage.max.wo.crit)
+    }
+    
+    HTML(text)
+
+  })
+  
+  output$txtJapanInfo <- renderText({
+    
+    req(input$alliedForceList)
+    req(input$japanForceList)
+    
+    getBattleUnits()
+    
+    forces.japan <- battle.forces$japan_units %>%
+      mutate(modifier = if_else(is_extended, 0.5, 1.0),
+             af_front = attack_front * modifier,
+             af_back =  attack_back * modifier,
+             af = if_else(is_flipped, af_back, af_front)) 
+    
+    af.japan <- sum(forces.japan$af)
+    
+    damage.min <- NA_integer_
+    
+    if (!is.null(battle.analysis$battle_losses)) 
+    {
+      result.w.crit <- prepDataExpectedBattleDamageTaken(battle.analysis$battle_losses, unit.data) %>%
+        filter(team == "Allies")
+
+      result.wo.crit <- prepDataExpectedBattleDamageTaken(battle.analysis$battle_losses, unit.data, exclude.critical = TRUE) %>%
+        filter(team == "Allies")
+      
+      damage.min <- min(result.w.crit$damage_taken)
+      damage.max.w.crit <- max(result.w.crit$damage_taken)
+      damage.max.wo.crit <- max(result.wo.crit$damage_taken)
+    }
+    
+    text <- paste("Japan AF =", af.japan)
+    
+    if (!is.na(damage.min))
+    {
+      text <- paste(text, "<br/>", 
+                    "Min Damage =", damage.min, "<br/>", 
+                    "Max Damage (with Critical) =", damage.max.w.crit, "<br/>",
+                    "Max Damage (w/o Critical =", damage.max.wo.crit)
+    }
+    
+    HTML(text)
+    
+  })
+  
+  getBattleUnits <- reactive({
     
     req(input$alliedForceList)
     req(input$japanForceList)
@@ -96,7 +185,7 @@ shinyServer(function(input, output, session) {
       if ("is_in_battle_hex" %in% input[[control.name]])
         units.inhex <- c(units.inhex, unit.id)
     }
-
+    
     forces.allies <- unit.data %>%
       filter(id %in% input$alliedForceList) %>%
       mutate(is_flipped = (id %in% units.flipped),
@@ -107,8 +196,22 @@ shinyServer(function(input, output, session) {
       filter(id %in% input$japanForceList) %>%
       mutate(is_flipped = (id %in% units.flipped),
              is_extended = (id %in% units.extended),
-             is_in_battle_hex = (id %in% units.inhex))
+             is_in_battle_hex = (id %in% units.inhex))    
     
+    battle.forces$allied_units <- forces.allies
+    battle.forces$japan_units <- forces.japan
+  })
+
+  observeEvent(input$btnAnalyzeBattle, {
+    
+    req(input$alliedForceList)
+    req(input$japanForceList)
+    
+    getBattleUnits()
+    
+    forces.allies <- battle.forces$allied_units
+    forces.japan <- battle.forces$japan_units
+
     dr.mods <- getDieRollMods(reaction.team = input$radioReactionPlayer, 
                               intel.condition = input$radioIntelCondition, 
                               us.airpower = as.integer(input$radioUSAir), 
