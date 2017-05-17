@@ -228,6 +228,8 @@ shinyServer(function(input, output, session) {
     battle.analysis$battle_results <- result$battle.results
     battle.analysis$battle_losses <- result$battle.losses
     
+    dir.create("output", showWarnings = FALSE, recursive = TRUE)
+    
     write.csv(forces.allies, "output/forces_allies.csv", row.names = FALSE)
     write.csv(forces.japan, "output/forces_japan.csv", row.names = FALSE)
     write.csv(result$battle.results, "output/battle_results.csv", row.names = FALSE)
