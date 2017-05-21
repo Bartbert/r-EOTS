@@ -5,6 +5,7 @@ library(data.table)
 library(plyr)
 library(dplyr)
 library(ggplot2)
+library(combinat)
 
 source("scripts/data_functions.R")
 source("scripts/plot_functions.R")

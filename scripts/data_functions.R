@@ -320,6 +320,125 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
     select(id, flipped, eliminated, af_post_battle)
 }
 
+
+applyDamage_noncritial <- function(forces, damage, enemy_air_unit_count = 0)
+{
+  damage.remaining <- damage
+  
+  forces.all <- forces %>%
+    mutate(flipped = FALSE,
+           eliminated = FALSE)
+  
+  forces.full.strength <- forces.all %>%
+    filter(!is_flipped)
+  
+  total.defense <- sum(forces.full.strength$defense)
+  mininum.defense <- ifelse(total.defense == 0, 0, min(forces.full.strength$defense))
+  
+  # If it's not possible to damage ANY full-strength unit, then just bail out now
+  if (mininum.defense > 0 && damage.remaining < mininum.defense)
+  {
+    # return results
+  }
+  
+  # If it's not possible to flip all full-strength units, then find the 
+  # best ones that CAN be flipped and then return
+  if (damage.remaining < total.defense)
+  {
+    # permute
+    # return results
+  }
+  
+  # Try to apply damage to each full-strength unit. Air unit limitations may prevent
+  # flipping all units.
+  if (total.defense > 0 && damage.remaining >= total.defense)
+  {
+    for (i in 1:nrow(forces.full.strength))
+    {
+      if (isIneligibleForDamage(forces.full.strength, 
+                                unit.record = forces.full.strength[i, ], 
+                                remote.air.unit.limit = enemy_air_unit_count))
+        next()
+      
+      if (damage.remaining >= forces.full.strength[i, defense])
+      {
+        damage.remaining <- damage.remaining - forces.full.strength[i, defense]
+        forces.full.strength[i, ]$flipped <- TRUE
+      }
+    }
+    
+    forces.all <- updateForcesDamaged(forces.all, forces.full.strength) 
+    
+    # If it was not possible to flip all full-strength units, then no further
+    # damage is possible, so return the results
+    if (sum(forces.full.strength$is_flipped) != nrow(forces.full.strength))
+    {
+      # return results
+    }
+  }
+  
+  # If we made it this far, then it should mean that all full-strength units
+  # have been flipped, or there were no full-strength units to begin with.
+  # Either way, we can now try to apply damage to flipped units
+  
+  if (sum(!forces.all$is_flipped) > 0)
+  {
+    # Something went wrong. All units should be flipped by now.
+  }
+  
+  # Permute through flipped units
+  
+}
+
+permuteUnits <- function(forces.test, damage, enemy_air_unit_count = 0)
+{
+  result <- data.table()
+  
+  permutations <- permn(forces.test$id)
+  
+  for (i in 1:length(permutations))
+  {
+    forces.permute <- forces.test
+    damage.remaining <- damage
+    damage.applied <- 0
+
+    for (unit.id in permutations[[i]])
+    {
+      unit.current <- forces.permute[id == unit.id, ]
+      
+      if (isIneligibleForDamage(forces.permute, 
+                                unit.record = unit.current, 
+                                remote.air.unit.limit = enemy_air_unit_count))
+        next()
+      
+      if (damage.remaining >= unit.current[1, defense])
+      {
+        if ( forces.permute[id == unit.id, ]$is_flipped) {
+          forces.permute[id == unit.id, ]$eliminated <- TRUE
+        } else {
+          forces.permute[id == unit.id, ]$flipped <- TRUE
+        }
+        
+        damage.remaining <- damage.remaining - unit.current[1, defense]
+        damage.applied <- damage.applied + unit.current[1, defense]
+
+      }
+      
+    }
+    
+    forces.permute <- forces.permute %>%
+      mutate(af_post_battle = case_when(eliminated ~ 0, 
+                                        flipped ~ af_back,
+                                        TRUE ~ af_front))
+    
+    result <- result %>%
+      bind_rows(data.table(index = i, damage_applied = damage.applied, af_post_battle = sum(forces.permute$af_post_battle)))
+  }
+  
+  result <- result %>%
+    arrange(desc(damage_applied), af_post_battle, index)
+}
+
 updateForcesDamaged <- function(forces.all, forces.damaged)
 {
   result <- forces.all %>%
@@ -500,5 +619,4 @@ testBattleAnalysis <- function()
                                   drm.allies = drm.allies, 
                                   drm.japan = drm.allies)
 }
-
 
