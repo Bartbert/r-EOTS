@@ -6,3 +6,5 @@ output/battle_results.csv
 output/forces_allies.csv
 output/forces_japan.csv
 output/battle_losses.csv
+packrat/lib*/
+packrat/src/
