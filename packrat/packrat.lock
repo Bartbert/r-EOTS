@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.5.0
-RVersion: 3.5.1
+RVersion: 3.5.2
 Repos: CRAN=https://cran.rstudio.com/
 
 Package: BH
@@ -73,13 +73,13 @@ Package: dplyr
 Source: CRAN
 Version: 0.7.8
 Hash: d6e576944199cba782a471015a822848
-Requires: BH, R6, Rcpp, assertthat, bindrcpp, glue, magrittr,
-    pkgconfig, plogr, rlang, tibble, tidyselect
+Requires: BH, R6, Rcpp, assertthat, glue, magrittr, pkgconfig, plogr,
+    rlang, bindrcpp, tibble, tidyselect
 
 Package: dtplyr
 Source: CRAN
 Version: 0.0.2
-Requires: data.table, dplyr, lazyeval
+Requires: data.table, lazyeval, dplyr
 
 Package: fansi
 Source: CRAN
@@ -90,8 +90,8 @@ Package: ggplot2
 Source: CRAN
 Version: 3.1.0
 Hash: ef541b05dda10b209d509b5bbaf46ea3
-Requires: digest, gtable, lazyeval, plyr, reshape2, rlang, scales,
-    tibble, viridisLite, withr
+Requires: digest, gtable, lazyeval, rlang, viridisLite, withr, plyr,
+    scales, reshape2, tibble
 
 Package: glue
 Source: CRAN
@@ -161,7 +161,7 @@ Package: pillar
 Source: CRAN
 Version: 1.3.1
 Hash: 9ed4c2a5d3047bfba3e852ad5e806d91
-Requires: cli, crayon, fansi, rlang, utf8
+Requires: crayon, fansi, rlang, utf8, cli
 
 Package: pkgconfig
 Source: CRAN
@@ -183,7 +183,7 @@ Package: promises
 Source: CRAN
 Version: 1.0.1
 Hash: f96ac20f3961868f8d6ec63a3bf3566f
-Requires: R6, Rcpp, later, magrittr, rlang
+Requires: R6, Rcpp, magrittr, rlang, later
 
 Package: purrr
 Source: CRAN
@@ -206,14 +206,14 @@ Package: scales
 Source: CRAN
 Version: 1.0.0
 Hash: 7d9b717abcec656ae7c5c982d72b75e5
-Requires: R6, RColorBrewer, Rcpp, labeling, munsell, viridisLite
+Requires: R6, RColorBrewer, Rcpp, labeling, viridisLite, munsell
 
 Package: shiny
 Source: CRAN
 Version: 1.2.0
 Hash: 6853126283ff0572d9f370a1520ac831
-Requires: R6, crayon, digest, htmltools, httpuv, jsonlite, later, mime,
-    promises, rlang, sourcetools, xtable
+Requires: R6, crayon, digest, jsonlite, mime, rlang, sourcetools,
+    xtable, htmltools, later, promises, httpuv
 
 Package: shinydashboard
 Source: CRAN
@@ -241,13 +241,13 @@ Package: tibble
 Source: CRAN
 Version: 2.0.0
 Hash: dd9c9442795b8b46425bf7ad5514bb0c
-Requires: cli, crayon, fansi, pillar, pkgconfig, rlang
+Requires: crayon, fansi, pkgconfig, rlang, cli, pillar
 
 Package: tidyselect
 Source: CRAN
 Version: 0.2.5
 Hash: fad1cf10c5c4996fca6ca68e0716d2e6
-Requires: Rcpp, glue, purrr, rlang
+Requires: Rcpp, glue, rlang, purrr
 
 Package: utf8
 Source: CRAN
