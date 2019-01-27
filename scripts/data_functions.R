@@ -3,7 +3,7 @@ getForceList <- function(battle.type, team.name, unit.data)
   result <- unit.data %>%
     filter(team == team.name,
            battle_type == battle.type) %>%
-    arrange(nationality, type, branch, desc(attack_front)) %>%
+    arrange(nationality, branch, type, unit_name, desc(attack_front)) %>%
     mutate(unit_stats = mapply(concatUnitStats, attack_front, defense, attack_back, range),
            type = paste0("[", substr(type, 1, 1), "]"),
            label = paste(unit_name, ":", unit_stats)) %>%

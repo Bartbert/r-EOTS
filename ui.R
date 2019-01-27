@@ -9,7 +9,7 @@ library(shiny)
 library(shinydashboard)
 
 dashboardPage(
-  dashboardHeader(title = "EOTS: South Pacific"),
+  dashboardHeader(title = "Empire of the Sun"),
   dashboardSidebar(width = "240px", collapsed = TRUE,
                    sidebarMenu(id = "sidebar_tabs",
                                menuItem("Battles", tabName = "battles"))),
