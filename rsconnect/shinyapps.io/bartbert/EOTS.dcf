@@ -5,8 +5,8 @@ account: bartbert
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 177976
-bundleId: 1394519
+bundleId: 1839816
 url: https://bartbert.shinyapps.io/EOTS/
-when: 1527366809.60577
+when: 1548612575.11513
 asMultiple: FALSE
 asStatic: FALSE
