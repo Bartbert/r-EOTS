@@ -8,3 +8,4 @@ output/forces_japan.csv
 output/battle_losses.csv
 packrat/lib*/
 packrat/src/
+packrat/desc
