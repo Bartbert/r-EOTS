@@ -52,7 +52,7 @@ analyzeAirNavalBattle <- function(forces.allies, forces.japan,
   
   af.japan <- sum(forces.japan$af)
   
-  battle.results <- data.table()
+  battle.results <- data.frame()
   
   for (dr.allies in 0:9)
   {
@@ -62,7 +62,7 @@ analyzeAirNavalBattle <- function(forces.allies, forces.japan,
       damage.japan <- calcuateAirNavalDamage(af.japan, drm.japan, dr.japan)
       
       battle.results <- battle.results %>%
-        bind_rows(data.table(dr_allies = dr.allies,
+        bind_rows(data.frame(dr_allies = dr.allies,
                              dr_japan = dr.japan,
                              damage_allies = damage.allies,
                              damage_japan = damage.japan))
@@ -100,19 +100,19 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
            japan_post_battle_af = 0,
            battle_winner = NA_character_)
   
-  battle.losses <- data.table()
+  battle.losses <- data.frame()
   
   for (i in 1:nrow(result))
   {
     pb.allies <- applyDamage(forces.allies, 
-                             damage = battle.results[i, damage_japan],
-                             critical = (battle.results[i, dr_japan] == 9), 
+                             damage = battle.results[i, ]$damage_japan,
+                             critical = (battle.results[i, ]$dr_japan == 9), 
                              max_damage = (reaction.team == "Japan"), 
                              enemy_air_unit_count = getAirUnitCount(forces.japan, remote_only = FALSE))
     
     pb.japan <- applyDamage(forces.japan, 
-                            damage = battle.results[i, damage_allies],
-                            critical = (battle.results[i, dr_allies] == 9), 
+                            damage = battle.results[i, ]$damage_allies,
+                            critical = (battle.results[i, ]$dr_allies == 9), 
                             max_damage = (reaction.team == "Allies"), 
                             enemy_air_unit_count = getAirUnitCount(forces.allies, remote_only = FALSE))
     
@@ -120,7 +120,7 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
     {
       if (reaction.team == "Japan") {
         
-        damage <- calcuateAirNavalDamage(sum(pb.japan$af_post_battle), drm.japan, battle.results[i, dr_japan])
+        damage <- calcuateAirNavalDamage(sum(pb.japan$af_post_battle), drm.japan, battle.results[i, ]$dr_japan)
         
         forces.japan.post.battle <- pb.japan %>%
           inner_join(unit.data, "id") %>%
@@ -128,12 +128,12 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
         
         pb.allies <- applyDamage(forces.allies, 
                                  damage,
-                                 critical = (battle.results[i, dr_japan] == 9), 
+                                 critical = (battle.results[i, ]$dr_japan == 9), 
                                  max_damage = (reaction.team == "Japan"), 
                                  enemy_air_unit_count = getAirUnitCount(forces.japan.post.battle, remote_only = FALSE))
       } else {
         
-        damage <- calcuateAirNavalDamage(sum(pb.allies$af_post_battle), drm.allies, battle.results[i, dr_allies])
+        damage <- calcuateAirNavalDamage(sum(pb.allies$af_post_battle), drm.allies, battle.results[i, ]$dr_allies)
         
         forces.allies.post.battle <- pb.allies %>%
           inner_join(unit.data, "id") %>%
@@ -141,7 +141,7 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
         
         pb.japan <- applyDamage(forces.japan, 
                                  damage,
-                                 critical = (battle.results[i, dr_allies] == 9), 
+                                 critical = (battle.results[i, ]$dr_allies == 9), 
                                  max_damage = (reaction.team == "Japan"), 
                                  enemy_air_unit_count = getAirUnitCount(forces.allies.post.battle, remote_only = FALSE))
       }
@@ -151,7 +151,7 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
     {
       if (reaction.team != "Japan") {
         
-        damage <- calcuateAirNavalDamage(sum(pb.japan$af_post_battle), drm.japan, battle.results[i, dr_japan])
+        damage <- calcuateAirNavalDamage(sum(pb.japan$af_post_battle), drm.japan, battle.results[i, ]$dr_japan)
         
         forces.japan.post.battle <- pb.japan %>%
           inner_join(unit.data, "id") %>%
@@ -159,12 +159,12 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
         
         pb.allies <- applyDamage(forces.allies, 
                                  damage,
-                                 critical = (battle.results[i, dr_japan] == 9), 
+                                 critical = (battle.results[i, ]$dr_japan == 9), 
                                  max_damage = (reaction.team == "Japan"), 
                                  enemy_air_unit_count = getAirUnitCount(forces.japan.post.battle, remote_only = FALSE))
       } else {
         
-        damage <- calcuateAirNavalDamage(sum(pb.allies$af_post_battle), drm.allies, battle.results[i, dr_allies])
+        damage <- calcuateAirNavalDamage(sum(pb.allies$af_post_battle), drm.allies, battle.results[i, ]$dr_allies)
         
         forces.allies.post.battle <- pb.allies %>%
           inner_join(unit.data, "id") %>%
@@ -172,7 +172,7 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
         
         pb.japan <- applyDamage(forces.japan, 
                                  damage,
-                                 critical = (battle.results[i, dr_allies] == 9), 
+                                 critical = (battle.results[i, ]$dr_allies == 9), 
                                  max_damage = (reaction.team == "Japan"), 
                                 enemy_air_unit_count = getAirUnitCount(forces.allies.post.battle, remote_only = FALSE))
       }
@@ -184,12 +184,12 @@ determineBattleWins <- function(battle.results, forces.allies, forces.japan,
                                           "Allies", "Japan")
     
     pb.allies <- pb.allies %>%
-      mutate(dr_allies = battle.results[i, dr_allies],
-             dr_japan = battle.results[i, dr_japan])
+      mutate(dr_allies = battle.results[i, ]$dr_allies,
+             dr_japan = battle.results[i, ]$dr_japan)
     
     pb.japan <- pb.japan %>%
-      mutate(dr_allies = battle.results[i, dr_allies],
-             dr_japan = battle.results[i, dr_japan])
+      mutate(dr_allies = battle.results[i, ]$dr_allies,
+             dr_japan = battle.results[i, ]$dr_japan)
     
     battle.losses <- battle.losses %>%
       bind_rows(pb.allies, pb.japan)
@@ -218,9 +218,9 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
       if (isIneligibleForDamage(forces.critical, unit.record = forces.critical[i, ], remote.air.unit.limit = enemy_air_unit_count))
         next()
       
-      if (damage.remaining >= forces.critical[i, defense])
+      if (damage.remaining >= forces.critical[i, ]$defense)
       {
-        damage.remaining <- damage.remaining - forces.critical[i, defense]
+        damage.remaining <- damage.remaining - forces.critical[i, ]$defense
         
         if (forces.critical[i, ]$is_flipped) {
           forces.critical[i, ]$eliminated <- TRUE
@@ -248,9 +248,9 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
     if (isIneligibleForDamage(forces.full, unit.record = forces.full[i, ], remote.air.unit.limit = enemy_air_unit_count))
       next()
     
-    if (damage.remaining >= forces.full[i, defense])
+    if (damage.remaining >= forces.full[i, ]$defense)
     {
-      damage.remaining <- damage.remaining - forces.full[i, defense]
+      damage.remaining <- damage.remaining - forces.full[i, ]$defense
       forces.full[i, ]$flipped <- TRUE
     }
   }
@@ -273,9 +273,9 @@ applyDamage <- function(forces, damage, critical = FALSE, max_damage = FALSE, en
       if (isIneligibleForDamage(forces.flipped, unit.record = forces.flipped[i, ], remote.air.unit.limit = enemy_air_unit_count))
         next()
       
-      if (damage.remaining >= forces.flipped[i, defense])
+      if (damage.remaining >= forces.flipped[i, ]$defense)
       {
-        damage.remaining <- damage.remaining - forces.flipped[i, defense]
+        damage.remaining <- damage.remaining - forces.flipped[i, ]$defense
         forces.flipped[i, ]$eliminated <- TRUE
       }
     }
@@ -360,9 +360,9 @@ applyDamage_noncritial <- function(forces, damage, enemy_air_unit_count = 0)
                                 remote.air.unit.limit = enemy_air_unit_count))
         next()
       
-      if (damage.remaining >= forces.full.strength[i, defense])
+      if (damage.remaining >= forces.full.strength[i, ]$defense)
       {
-        damage.remaining <- damage.remaining - forces.full.strength[i, defense]
+        damage.remaining <- damage.remaining - forces.full.strength[i, ]$defense
         forces.full.strength[i, ]$flipped <- TRUE
       }
     }
@@ -392,7 +392,7 @@ applyDamage_noncritial <- function(forces, damage, enemy_air_unit_count = 0)
 
 permuteUnits <- function(forces.test, damage, enemy_air_unit_count = 0)
 {
-  result <- data.table()
+  result <- data.frame()
   
   permutations <- permn(forces.test$id)
   
@@ -402,21 +402,25 @@ permuteUnits <- function(forces.test, damage, enemy_air_unit_count = 0)
     damage.remaining <- damage
     damage.applied <- 0
 
-    for (unit.id in permutations[[i]])
+    for (unit.id in permutations[[i, ]])
     {
-      unit.current <- forces.permute[id == unit.id, ]
+      unit.current <- forces.permute %>% filter(id == unit.id)
       
       if (isIneligibleForDamage(forces.permute, 
                                 unit.record = unit.current, 
                                 remote.air.unit.limit = enemy_air_unit_count))
         next()
       
-      if (damage.remaining >= unit.current[1, defense])
+      if (damage.remaining >= unit.current[1]$defense)
       {
-        if ( forces.permute[id == unit.id, ]$is_flipped) {
-          forces.permute[id == unit.id, ]$eliminated <- TRUE
+        if ( forces.permute %>% filter(id == unit.id)$is_flipped) {
+          forces.permute <- forces.permute %>%
+            filter(id == unit.id) %>%
+            mutate(eliminated = TRUE)
         } else {
-          forces.permute[id == unit.id, ]$flipped <- TRUE
+          forces.permute <- forces.permute %>%
+            filter(id == unit.id) %>% 
+            mutate(flipped = TRUE)
         }
         
         damage.remaining <- damage.remaining - unit.current[1, defense]
@@ -432,7 +436,7 @@ permuteUnits <- function(forces.test, damage, enemy_air_unit_count = 0)
                                         TRUE ~ af_front))
     
     result <- result %>%
-      bind_rows(data.table(index = i, damage_applied = damage.applied, af_post_battle = sum(forces.permute$af_post_battle)))
+      bind_rows(data.frame(index = i, damage_applied = damage.applied, af_post_battle = sum(forces.permute$af_post_battle)))
   }
   
   result <- result %>%
@@ -459,7 +463,7 @@ getRemoteAirUnitCount <- function(forces.all, damaged_only = FALSE)
   }
   
   air.unit.count <- air.unit.count %>%
-    summarise(cnt = n()) 
+    summarise(cnt = n(), .groups = "drop") 
   
   air.unit.count <- sum(air.unit.count$cnt)
   
@@ -477,7 +481,7 @@ getAirUnitCount <- function(forces.all, remote_only = FALSE)
   }
   
   air.unit.count <- air.unit.count %>%
-    summarise(cnt = n()) 
+    summarise(cnt = n(), .groups = "drop") 
   
   air.unit.count <- sum(air.unit.count$cnt)
   
@@ -524,14 +528,14 @@ prepDataExpectedBattleWins <- function(battle.results)
 {
   result <- battle.results %>%
     group_by(battle_winner) %>%
-    summarise(win_probability = n()) %>%
+    summarise(win_probability = n(), .groups = "drop") %>%
     mutate(win_probability = win_probability/100)
   
   if (nrow(filter(result, battle_winner == "Allies")) == 0)
-    bind_rows(data.table(battle_winner = "Allies", win_probability = 0))
+    bind_rows(data.frame(battle_winner = "Allies", win_probability = 0))
   
   if (nrow(filter(result, battle_winner == "Japan")) == 0)
-    bind_rows(data.table(battle_winner = "Japan", win_probability = 0))
+    bind_rows(data.frame(battle_winner = "Japan", win_probability = 0))
   
   result
 }
@@ -540,14 +544,14 @@ prepDataExpectedBattleDamageInflicted <- function(battle.results)
 {
   result.japan <- battle.results %>%
     group_by(damage_japan) %>%
-    summarise(damage_probability = n()) %>%
+    summarise(damage_probability = n(), .groups = "drop") %>%
     mutate(damage_probability = damage_probability/100,
            team_name = "Japan") %>%
     rename(damage_inflicted = damage_japan)
   
   result.allies <- battle.results %>%
     group_by(damage_allies) %>%
-    summarise(damage_probability = n()) %>%
+    summarise(damage_probability = n(), .groups = "drop") %>%
     mutate(damage_probability = damage_probability/100,
            team_name = "Allies") %>%
     rename(damage_inflicted = damage_allies)
@@ -570,9 +574,9 @@ prepDataExpectedBattleDamageTaken <- function(battle.losses, unit.data, exclude.
     mutate(damage_taken = (flipped * defense + eliminated * defense)) %>%
     group_by(team, dr_allies, dr_japan) %>%
     summarise(cnt = n(),
-              damage_taken = sum(damage_taken)) %>%
+              damage_taken = sum(damage_taken), .groups = "drop") %>%
     group_by(team, damage_taken) %>%
-    summarise(cnt = n()) %>%
+    summarise(cnt = n(), .groups = "drop") %>%
     mutate(damage_probability = cnt/100)
   
 }
@@ -583,7 +587,7 @@ prepDataExpectedBattleDamageTaken_ByUnit <- function(battle.losses, unit.data)
     inner_join(unit.data, "id") %>%
     mutate(damage_taken = (flipped * defense + eliminated * defense)) %>%
     group_by(id, team, unit_name, damage_taken) %>%
-    summarise(cnt = n()) %>%
+    summarise(cnt = n(), .groups = "drop") %>%
     mutate(damage_probability = cnt/100)
   
 }

@@ -287,7 +287,7 @@ shinyServer(function(input, output, session) {
       query <- parseQueryString(req$QUERY_STRING)
       unit.id <- as.integer(query$id)
       
-      name.file <- file.path("images", data[id == unit.id, image_name_front])
+      name.file <- file.path("images", data %>% filter(id == unit.id) %>% select(image_name_front) %>% pull())
 
       shiny:::httpResponse(
         200, 'image/gif', readBin(name.file, 'raw', file.info(name.file)[, 'size'])

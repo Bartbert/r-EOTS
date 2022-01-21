@@ -21,8 +21,17 @@ unitStatus <- function(input, output, session, unit.id, unit.data)
 {
   output$imgUnit <- renderImage({
     
-    image.front <- unit.data[id == unit.id, image_name_front]
-    image.back <- unit.data[id == unit.id, image_name_back]
+    cat("Unit ID:", unit.id, "\n")
+    
+    image.front <- unit.data %>%
+      filter(id == unit.id) %>%
+      select(image_name_front) %>%
+      pull()
+    
+    image.back <- unit.data %>%
+      filter(id == unit.id) %>%
+      select(image_name_back) %>%
+      pull()
     
     if ("is_flipped" %in% input$chkUnitStatus) {
       name.file <- normalizePath(file.path("images", image.back))

@@ -22,7 +22,7 @@ plotExpectedBattleDamageInflicted <- function(data.all)
   plot.data <- data.all %>%
     mutate(damage_inflicted = factor(damage_inflicted))
   
-  team.name <- data.all[1, team_name]
+  team.name <- data.all[1, ]$team_name
   
   p <- ggplot(plot.data, aes(x = damage_inflicted, y = damage_probability))
   p <- p + geom_bar(stat = "identity")
@@ -63,7 +63,7 @@ plotExpectedBattleDamageTaken <- function(data.all, team.name)
 plotExpectedBattleDamageTaken_ByUnit <- function(data.all)
 {
   plot.data <- data.all %>%
-    data.table() %>%
+    data.frame() %>%
     mutate(unit_name = as.factor(unit_name),
            sort_val = if_else(team == "Allies", 0, 1),
            unit_name = reorder(unit_name, sort_val, FUN = sum))
